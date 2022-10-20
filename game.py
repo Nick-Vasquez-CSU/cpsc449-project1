@@ -1,13 +1,47 @@
 # from requests import put
+import dataclasses
 
+from quart import Quart, request, jsonify, abort, g
+from sqlalchemy.testing.pickleable import User
 
-# get function
+import Login
+app = Quart(__name__)
 
-# patch 
+#to POST Login signup
+@app.route("/signup", methods=["POST"])
+@Login.validate_request(User)
+async def signUp(data):
+    # _get_db() to fetch the db connection
+    db = await Login._get_db()
+    user = dataclasses.asdict(data)
 
-# post 
+    try:
+        await db.execute(
+            """INSERT INTO users(user_id, user_pass) values (:username, :password)
+            """,
+            user
+        )
 
-# delete 
+    except sqlite3.IntegrityError as e:
+        Login.abort(409,e)
+
+    return {"Message": "User has been created succesfully"}, 201
+
+#to GET Login signin
+@app.route("/signin", methods=["GET"])
+async def signIn():
+    db = await Login._get_db()
+    await Login.verify_user(db, request.authorization)
+
+    response = {"authenticated": True}
+    return response, 200
+#to GET creation of new word
+
+#to GET list of games
+
+#to POST the game details
+
+#to DELETE the game data
 
 import sqlite3
 
