@@ -5,10 +5,13 @@ Group Number 10
 
 Team Members:
 
-Sarthak Gajjar - Wordle Database and its Connection
+Sarthak Gajjar - Wordle Database and Json data_pop script
+
 Prashams Omprakash Daulath - Wordle Login Api
-Steven Rico - Wordle Game Api
-Nicolas Vasquez - Wordle Game Api
+
+Steven Rico - Wordle Game Apis
+
+Nicolas Vasquez - Wordle Game Apis
 
 For initializing the new fresh database
 -run init.sh using "sh init.sh" command!
