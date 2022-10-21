@@ -35,6 +35,7 @@ CREATE TABLE secret(
 );
 
 CREATE TABLE correct(
-    correct_word VARCHAR(5) PRIMARY KEY
+    correct_word_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    correct_word VARCHAR(5)
 );
 COMMIT;
