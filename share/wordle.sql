@@ -17,25 +17,26 @@ CREATE TABLE id(
     user_id VARCHAR(50),
     secret_word_id INTEGER,
     FOREIGN KEY(user_id) REFERENCES user(user_id),
-    FOREIGN KEY (secret_word_id) REFERENCES secret(secret_word_id)
+    FOREIGN KEY(secret_word_id) REFERENCES secret(secret_word_id)
 );	    
 
 CREATE TABLE play(
     play_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    game_id INTEGER,
+    game_id INTEGER REFERENCES id(game_id),
     guessed_word VARCHAR(5),
     cr_lt_cr_pl VARCHAR(10),
     cr_lt_wr_pl VARCHAR(10)
-    FOREIGN KEY (game_id) REFERENCES id(game_id),
 );
 
 CREATE TABLE secret(
     secret_word_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    secret_word VARCHAR(5)
+    secret_word VARCHAR(5),
+    UNIQUE(secret_word)
 );
 
 CREATE TABLE correct(
     correct_word_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    correct_word VARCHAR(5)
+    correct_word VARCHAR(5),
+    UNIQUE(correct_word)
 );
 COMMIT;
