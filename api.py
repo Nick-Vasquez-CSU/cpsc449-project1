@@ -12,6 +12,8 @@ import toml
 from quart import Quart, g, request, abort
 from quart_schema import QuartSchema, RequestSchemaValidationError, validate_request
 
+from game import signUp
+
 app = Quart(__name__)
 QuartSchema(app)
 
@@ -34,28 +36,28 @@ async def intro():
     print(prompt)
 
 
-@app.route('/signup')
-async def signup(pl):
-    suBool = True
-    while suBool:
-        pl.user_id = input('Please enter a username: ')
-        pl.user_pass = input('Please enter a password: ')
-        con = await _get_db()
-        db = con.cursor()
-        holder = db.execute("SELECT user_id FROM user WHERE user_id=:user",{'user': pl.user_id})
-        name = holder.fetchone()
-        holder = db.execute("SELECT user_pass FROM user WHERE user_id=:user",{'user': pl.user_id})
-        Password = holder.fetchone()
-        if name == None:
-            print('Welcome new user!')
-            db.execute("INSERT INTO user (user_id, user_pass) VALUES(?, ?)",(pl.user_id, pl.user_pass))
-            con.commit()
-            suBool = False
-        elif pl.user_pass == Password[0]:
-            print('Welcome back')
-            suBool = False
-        else:
-            print('This password does not match this username...')
+# @app.route('/signup')
+# async def signup(pl):
+#     suBool = True
+#     while suBool:
+#         pl.user_id = input('Please enter a username: ')
+#         pl.user_pass = input('Please enter a password: ')
+#         con = await _get_db()
+#         db = con.cursor()
+#         holder = db.execute("SELECT user_id FROM user WHERE user_id=:user",{'user': pl.user_id})
+#         name = holder.fetchone()
+#         holder = db.execute("SELECT user_pass FROM user WHERE user_id=:user",{'user': pl.user_id})
+#         Password = holder.fetchone()
+#         if name == None:
+#             print('Welcome new user!')
+#             db.execute("INSERT INTO user (user_id, user_pass) VALUES(?, ?)",(pl.user_id, pl.user_pass))
+#             con.commit()
+#             suBool = False
+#         elif pl.user_pass == Password[0]:
+#             print('Welcome back')
+#             suBool = False
+#         else:
+#             print('This password does not match this username...')
 
 
 @app.route('/ChooseGame')
@@ -87,7 +89,7 @@ async def choosegame(pl):
             con.commit()
             cgBool = False
         elif valInt not in arr:
-            print("Invalid input")
+            return "Invalid input"
         else:
             print("Loading Game")
             pl.game_id = valInt
@@ -122,28 +124,28 @@ async def play(pl):
         print(check)
 
         if cr_word3 == guess:
-            print('Correct!!!')
+            return 'Correct!!!'
         #    db.execute("DELETE FROM play WHERE play_id=:id", {'id': pl.play_id})
         #    db.execute("DELETE FROM id WHERE game_id=:id", {'id': pl.play_id})
             con.commit()
             break
         elif check == None:
-            print("Invalid input. Must be a real word")
+            return "Invalid input. Must be a real word"
         else:
             for i in cr_word:
                 #check each letter for each word
                 pass
 
 
-def main():
-    player = User()
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(asyncio.gather(
-        intro(),
-
-        signup(player),
-        choosegame(player),
-        play(player)
-    ))
-
-main()
+# def main():
+#     player = User()
+#     loop = asyncio.get_event_loop()
+#     loop.run_until_complete(asyncio.gather(
+#         intro(),
+#
+#         signUp(player),
+#         choosegame(player),
+#         play(player)
+#     ))
+#
+# main()

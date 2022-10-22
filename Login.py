@@ -2,7 +2,7 @@ import dataclasses
 import sqlite3
 import databases
 
-from quart import Quart, request, jsonify, abort, g
+from quart import Quart, request, jsonify, abort, g, app
 
 
 @dataclasses.dataclass

@@ -34,7 +34,23 @@ async def signIn():
     await Login.verify_user(db, request.authorization)
 
     response = {"authenticated": True}
-    return response, 200
+    return response, 200, app.route('/ChooseGame')
+
+
+#start up page to select the options
+@app.route("/", methods=["GET"])
+async def startUp():
+    return "Enter the number to continue\n" \
+           "1.SignUp 2.SignIn"
+
+#select the options
+@app.route("/<int:num>", methods=["GET"])
+async def startUp(num):
+    if num == 1:
+        return app.route("/signup")
+    elif num == 2:
+        return app.route("/signin")
+
 #to GET creation of new word
 
 #to GET list of games
