@@ -95,7 +95,7 @@ async def verify_user(db, authorization):
             if responseFromDB:
                 return responseFromDB.user_id
             else:
-                print("Error with the username or password")
+                #print("Error with the username or password")
                 abort(401)
         else:
             abort(401)
@@ -131,12 +131,42 @@ async def signIn():
     #         print('This password does not match this username...')
 
 
-@app.route('/ChooseGame/<string:user>', methods=["GET"])
-async def choosegame(user):
+@app.route('/DisplayGames/<string:user>', methods=["GET"])
+async def displaygames(user):
     db = await _get_db()
 
-    tempUser = await db.fetch_one("SELECT user_id FROM user WHERE user=:user", values={"user":user})
-    return tempUser
+    tempUser = await db.fetch_one("SELECT user_id FROM user WHERE user_id=:user", values={"user":user})
+    if tempUser: # Exists
+        gameList = await db.fetch_all("SELECT * FROM id WHERE user_id=:user", values={"user":user})
+        if len(gameList) == 0:
+            return {"Message": "No games found under this username..."}, 406
+
+        return list(map(dict,gameList)), {"Message": "Games were found under this username" }, 201
+    else:
+        abort(404)
+
+
+@app.route('/LoadGame/<string:user>/<int:gID>', methods=["GET"])
+async def loadgame(user, gID):
+    db = await _get_db()
+
+    tempUser = await db.fetch_one("SELECT user_id FROM user WHERE user_id=:user", values={"user":user})
+    if tempUser: # Exists
+        play = await db.fetch_all("SELECT * FROM play WHERE game_id=:gID", values={"gID":gID})
+        if len(play) == 0:
+            return {"Message": "No plays active for the game id..."}, 406
+
+        return list(map(dict,play)), {"Message": "Displaying current plays under this game id" }, 201
+    else:
+        abort(404)
+
+@app.route('/CreateGame', methods=["POST"])
+@validate_request(Id)
+async def creategame(data):
+    db = await _get_db()
+    tempUser = dataclasses.asdict(data)
+    
+
 #     cgBool = True
 #     while cgBool:
 #         con = await _get_db()
