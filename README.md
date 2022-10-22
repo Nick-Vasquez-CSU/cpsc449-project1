@@ -7,7 +7,7 @@ Team Members:
 
 # Sarthak Gajjar - Wordle Database, Json data_pop and game data related issues
 
-# Prashams Omprakash Daulath - Wordle Login Api and user auth
+# Prashams Omprakash Daulath - Wordle Login Api and user auth - Converting local code logic to restful service
 
 # Steven Rico - Wordle Game Apis and game logic
 
