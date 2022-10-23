@@ -165,8 +165,18 @@ async def loadgame(user, gID):
 async def creategame(data):
     db = await _get_db()
     tempUser = dataclasses.asdict(data)
-    
+    tempUser2 = await db.fetch_one("SELECT user_id FROM user WHERE user_id=:user", values={"user":tempUser})
 
+    if tempUser2: # Exists
+        randy = random.randint(0, 2309)
+        newWord = await db.fetch_one("SELECT secret_word FROM secret WHERE secret_word_id=:randInt", values={"randInt":randy})
+
+        newGame = await db.execute("INSERT INTO id(game_id, user_id, secret_word_id) VALUES (:gID, :uID, :swID)", (None, tempUser2, randy))
+        tempgID = await db.fetch_one("SELECT game_id FROM id WHERE guessed_word=:newWord", values={"newWord":newWord})
+        newPlay = await db.execute("INSERT INTO play(play_id, game_id, guessed_word, cr_lt_cr_pl, cr_lt_wr_pl) VALUES (:pID, :gID, :gW, :cr, :wr)", (0, tempgID, '-----', '-----', '-'))
+        return {"Message": "Created new game and play"}, 201
+    else:
+        abort(404)
 #     cgBool = True
 #     while cgBool:
 #         con = await _get_db()
